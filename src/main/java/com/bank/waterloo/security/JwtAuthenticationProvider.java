@@ -1,5 +1,6 @@
 package com.bank.waterloo.security;
 
+import com.bank.waterloo.exception.WaterlooException;
 import com.bank.waterloo.model.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
@@ -28,7 +29,7 @@ public class JwtAuthenticationProvider extends AbstractUserDetailsAuthentication
         User jwtUser = JwtUtil.validate(token);
 
         if (jwtUser == null) {
-            throw new RuntimeException("JWT Token is incorrect");
+            throw new WaterlooException("JWT Token is incorrect");
         }
 
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils

@@ -2,6 +2,7 @@ package com.bank.waterloo.service;
 
 import com.bank.waterloo.dto.LoginDTO;
 import com.bank.waterloo.dto.LoginResponseDTO;
+import com.bank.waterloo.exception.WaterlooException;
 import com.bank.waterloo.model.User;
 import com.bank.waterloo.model.UserStatus;
 import com.bank.waterloo.security.JwtUtil;
@@ -35,15 +36,15 @@ public class LoginServiceImp implements LoginService {
     public LoginResponseDTO verifyUserNameAndPassword(LoginDTO loginDTO) throws NoSuchAlgorithmException {
         User user = userService.findByUserName(loginDTO.getUserName());
         if (user == null)
-            throw new IllegalArgumentException(MSG_INVALID_USERNAME_PASSWORD);
+            throw new WaterlooException(MSG_INVALID_USERNAME_PASSWORD);
         if (user.getStatus().equals(UserStatus.BLOCKED.toString())) {
-            throw new IllegalArgumentException(MSG_BLOCK_USER);
+            throw new WaterlooException(MSG_BLOCK_USER);
         }
         String password = CommonUtil.sha256Password(loginDTO.getPassword());
         User currentUser = userService.findByUserNameAndPassword(loginDTO.getUserName(), password);
         if (currentUser == null) {
             updateUserIncorrectPasswordCount(user);
-            throw new IllegalArgumentException(MSG_INVALID_USERNAME_PASSWORD);
+            throw new WaterlooException(MSG_INVALID_USERNAME_PASSWORD);
         }
         if (user.getInCorrectPasswordCount() != 0)
             setToActiveUser(user);
