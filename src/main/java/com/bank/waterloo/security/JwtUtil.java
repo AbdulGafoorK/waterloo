@@ -5,10 +5,14 @@ import com.bank.waterloo.util.EnvironmentConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtUtil.class);
 
     public static User validate(String token) {
 
@@ -23,7 +27,7 @@ public class JwtUtil {
             jwtUser.setName(body.getSubject());
             jwtUser.setId(Long.parseLong((String) body.get("id")));
         } catch (Exception e) {
-            System.out.println(e);
+            LOGGER.error(e.getMessage());
         }
 
         return jwtUser;
