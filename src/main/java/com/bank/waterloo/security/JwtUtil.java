@@ -1,7 +1,6 @@
 package com.bank.waterloo.security;
 
 import com.bank.waterloo.model.User;
-import com.bank.waterloo.util.EnvironmentConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -12,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtil {
 
+    private static String  JWT_SECRET_KEY ="waterloo_secret_key";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtUtil.class);
 
     public static User validate(String token) {
@@ -19,7 +20,7 @@ public class JwtUtil {
         User jwtUser = null;
         try {
             Claims body = Jwts.parser()
-                    .setSigningKey(EnvironmentConstants.JWT_SECRET_KEY)
+                    .setSigningKey(JWT_SECRET_KEY)
                     .parseClaimsJws(token)
                     .getBody();
 
@@ -41,7 +42,7 @@ public class JwtUtil {
 
         return Jwts.builder()
                 .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS512, EnvironmentConstants.JWT_SECRET_KEY)
+                .signWith(SignatureAlgorithm.HS512, JWT_SECRET_KEY)
                 .compact();
     }
 }
