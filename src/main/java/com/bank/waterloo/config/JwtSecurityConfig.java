@@ -1,5 +1,6 @@
 package com.bank.waterloo.config;
 
+import com.bank.waterloo.model.UserRole;
 import com.bank.waterloo.security.JwtAuthenticationEntryPoint;
 import com.bank.waterloo.security.JwtAuthenticationProvider;
 import com.bank.waterloo.security.JwtAuthenticationTokenFilter;
@@ -48,8 +49,10 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/auth", "/*swagger*/**").permitAll()
+                .antMatchers("/auth","/*swagger*/**").permitAll()
                 .antMatchers("**/api/**").authenticated()
+                .antMatchers("**/api/user/**").hasAuthority(UserRole.USER.toString())
+                .antMatchers("**/api/admin/**").hasAuthority(UserRole.ADMIN.toString())
                 .and()
                 .exceptionHandling().authenticationEntryPoint(entryPoint)
                 .and()
